@@ -1,7 +1,6 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-
 const galleryRef = document.querySelector(".gallery");
 galleryRef.innerHTML = addMarkupGallary(galleryItems);
 
@@ -28,12 +27,12 @@ function addMarkupGallary(arr) {
 const imgRef = galleryRef.querySelectorAll("img");
 
 if ("loading" in HTMLImageElement.prototype) {
-    imgRef.forEach((el) => {
+  imgRef.forEach((el) => {
     el.src = el.dataset.src;
   });
 } else {
   imgRef.forEach((el) => {
-    el.classList.add('lazyload');
+    el.classList.add("lazyload");
   });
   const script = document.createElement("script");
   script.src =
@@ -53,16 +52,26 @@ function onImagesOpenModal(evt) {
   const urlElementGallery = evt.target.dataset.source;
   if (evt.target.nodeName !== "IMG") {
     return;
-  }
-  const instance = basicLightbox.create(`
+  } else {
+    const instance = basicLightbox.create(
+      `
           <img src="${urlElementGallery}" width="800" height="600">
-      `);
-  instance.show();
-  galleryRef.addEventListener("keydown", onEscapeCloseModal);
-  function onEscapeCloseModal(evt) {
-    if (evt.code === "Escape") {
-      instance.close();
-      galleryRef.removeEventListener("keydown", onEscapeCloseModal);
+      `,
+      {
+        onShow: (instance) => {
+          galleryRef.addEventListener("keydown", onEscapeCloseModal);
+        },
+        onClose: (instance) => {
+          galleryRef.removeEventListener("keydown", onEscapeCloseModal);
+        },
+      }
+    );
+    instance.show();
+
+    function onEscapeCloseModal(evt) {
+      if (evt.code === "Escape") {
+        instance.close();
+      }
     }
   }
 }
@@ -106,13 +115,9 @@ function onImagesOpenModal(evt) {
 //       instance.close();
 //       galleryRef.removeEventListener('keydown', onEscapeCloseModal)
 //     }
-    
+
 //   }
- 
+
 // }
-
-  
-
-
 
 // console.log(galleryItems);
